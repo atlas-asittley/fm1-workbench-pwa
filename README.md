@@ -25,10 +25,12 @@ source + SDK archive). The PWA additions listed below are released under the sam
 
 | File | What it is |
 |---|---|
-| `index.html` | The official `FM1-Open-V14-Workbench.html` plus two blocks marked `FM1-PWA:BEGIN` / `FM1-PWA:END`: one in `<head>` (manifest link, theme colour, icons, a comment naming the original file and its checksum) and one before `</html>` (registers the service worker). Strip those two blocks and the file is identical to the release asset. |
+| `index.html` | The official `FM1-Open-V14-Workbench.html` plus two blocks marked `FM1-PWA:BEGIN` / `FM1-PWA:END`: one in `<head>` (manifest link, theme colour, icons, the sign-in scripts, a comment naming the original file and its checksum) and one before `</html>` (registers the service worker). Strip those two blocks and the file is identical to the release asset. |
+| `gate.js` | A sign-in screen over the workbench: email + password against the owner's Supabase project, allowed only if `public.is_owner()` says yes. Once confirmed on a device it opens offline too, and re-checks whenever online. **It is a curtain, not security** — this repo and the app file are public. The workbench underneath is not changed. |
+| `vendor/supabase.min.js` | supabase-js 2.45.4 (MIT, `vendor/supabase-js.LICENSE`), vendored so the sign-in code is available offline. |
 | `upstream/` | The untouched release asset and M-VAVE's `SHA256SUMS-V14`, for comparison. |
 | `manifest.webmanifest` | App name "FM1 Workbench", short name "FM1", standalone, landscape, colours `#121518`. |
-| `sw.js` | Service worker: pre-caches `index.html`, the manifest and the icons; serves them cache-first; versioned cache name (`fm1-wb-<tag>-<sha>-r<n>`) so an update replaces the old cache. |
+| `sw.js` | Service worker: pre-caches `index.html`, the manifest, the icons, `gate.js` and supabase-js; serves them cache-first; versioned cache name (`fm1-wb-<tag>-<sha>-r<n>`) so an update replaces the old cache. |
 | `icons/` | 192 px and 512 px icons, plus maskable versions. Original design (two FM operator rings and a modulated wave), not M-VAVE's logo. Drawn by `tools/make-icons.py`. |
 | `tools/update.mjs` | One-command updater (below). |
 | `pwa.json` | Which upstream file and version is currently wrapped. |
@@ -38,8 +40,8 @@ source + SDK archive). The PWA additions listed below are released under the sam
 Nothing. The official file is fully self-contained: UI, WASM sound engine, simulator, firmware image
 and sample bank are all inlined (base64). Its only `fetch()` is for assets given as a same-origin
 URL, and in this build every asset is inlined, so it never runs. The audio worklet and encoder
-worker are created from `data:`/`blob:` URLs. It uses system fonts only. So nothing needed to be
-vendored.
+worker are created from `data:`/`blob:` URLs. It uses system fonts only. So nothing of M-VAVE's needed
+vendoring. The only network calls this wrap adds are the sign-in checks to Supabase.
 
 Online-only bits, left alone (they are plain links that open in the browser):
 - About dialog: M-VAVE's source + SDK zip on `open.m-vave.com`, and the forum `forum.m-vave.com`.

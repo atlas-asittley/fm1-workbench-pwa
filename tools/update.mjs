@@ -97,6 +97,8 @@ const headBlock =
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<script src="vendor/supabase.min.js"></script>
+<script src="gate.js"></script>
 <!-- FM1-PWA:END head -->
 `;
 const swBlock =
