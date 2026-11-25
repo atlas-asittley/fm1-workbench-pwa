@@ -1,0 +1,57 @@
+// Phone layout switch for fm1-workbench-pwa (NOT part of M-VAVE's build). Styling lives in phone.css.
+// On a landscape phone the virtual FM-1 fills the screen; the ☰ button shows the normal page
+// (projects, files, help, device update) and "Back to synth" returns.
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var small = window.matchMedia('(orientation: landscape) and (max-height: 560px)');
+  var get = function (k) { try { return localStorage.getItem(k); } catch (_) { return null; } };
+  var set = function (k, v) { try { localStorage.setItem(k, v); } catch (_) {} };
+  var full = false; // user chose the normal page for now
+
+  function apply() {
+    var on = small.matches && !full;
+    root.classList.toggle('fm1-phone', on);
+    root.classList.toggle('fm1-full', small.matches && full);
+    if (on) {
+      var tab = document.getElementById('tab-sim'), btn = document.getElementById('mode-sim');
+      if (tab && tab.hidden && btn) btn.click();
+    }
+  }
+  function setKeys(open) {
+    root.classList.toggle('fm1-kb-open', open);
+    set('fm1-kb-open', open ? '1' : '0');
+    var t = document.getElementById('fm1-kb-tab');
+    if (t) { t.textContent = open ? 'KEYS ▼' : 'KEYS ▲'; t.setAttribute('aria-expanded', String(open)); }
+  }
+  // The workbench builds its encoders with script; tag them (data attributes only) once they exist.
+  function tag() {
+    var encs = document.querySelectorAll('#sim-device > .encoder:not([data-fm1-enc])');
+    if (!encs.length) return;
+    encs = document.querySelectorAll('#sim-device > .encoder');
+    for (var i = 0; i < encs.length; i++) {
+      encs[i].setAttribute('data-fm1-enc', i < 4 ? String(i + 1) : 'k');
+      if (i >= 4) encs[i].setAttribute('data-fm1-knob', String(i - 3));
+    }
+  }
+  function build() {
+    tag();
+    var dev = document.getElementById('sim-device');
+    if (dev && window.MutationObserver) new MutationObserver(tag).observe(dev, { childList: true });
+    var bar = document.createElement('div');
+    bar.id = 'fm1-phone-bar';
+    bar.innerHTML = '<button id="fm1-kb-tab" type="button" aria-label="Show or hide the keyboard"></button>' +
+      '<button id="fm1-menu-btn" type="button" aria-label="Menu: show the full page">☰</button>';
+    document.body.appendChild(bar);
+    var back = document.createElement('button');
+    back.id = 'fm1-synth-btn'; back.type = 'button'; back.textContent = 'Back to synth';
+    document.body.appendChild(back);
+    document.getElementById('fm1-kb-tab').addEventListener('click', function () { setKeys(!root.classList.contains('fm1-kb-open')); });
+    document.getElementById('fm1-menu-btn').addEventListener('click', function () { full = true; apply(); scrollTo(0, 0); });
+    back.addEventListener('click', function () { full = false; apply(); });
+    setKeys(get('fm1-kb-open') === '1');
+    apply();
+  }
+  if (small.addEventListener) small.addEventListener('change', apply); else small.addListener(apply);
+  if (document.body) build(); else document.addEventListener('DOMContentLoaded', build);
+})();

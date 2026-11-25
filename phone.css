@@ -1,0 +1,96 @@
+/* Phone layout for fm1-workbench-pwa (NOT part of M-VAVE's build).
+   Only active while <html> has class fm1-phone (set by phone.js on a landscape phone).
+   Re-arranges the virtual FM-1 to fill the screen: LCD large in the middle, encoders on the left,
+   knobs + buttons on the right, keyboard in a pull-up drawer. Pure CSS over the official markup:
+   no control is added, removed or rewired. Positions override the panel's inline left/top. */
+
+html.fm1-phone{
+  --kb:0px;                                             /* keyboard drawer height when open */
+  --A:calc(100dvh - var(--kb));                         /* height left for the panel */
+  --S:min(calc(var(--A) - 40px), 46vw);                 /* LCD size (square) */
+  --side:calc((100vw - var(--S)) / 2);                  /* width of each side zone */
+  --dial:min(calc(var(--A) * .15), calc(var(--side) * .24));
+  --kdial:min(calc(var(--A) * .13), calc(var(--side) * .18));
+  --lab:max(9px, calc(var(--A) * .032));
+  overflow:hidden;
+}
+html.fm1-phone.fm1-kb-open{--kb:38dvh}
+html.fm1-phone body{overflow:hidden;background:#10171c}
+
+/* the panel becomes the whole screen */
+html.fm1-phone #sim-device{
+  position:fixed!important;inset:0;width:100vw;height:100dvh;min-width:0;aspect-ratio:auto;
+  margin:0;border:0;border-radius:0;z-index:1000;box-shadow:none;
+  background:linear-gradient(125deg,#3e474b 0%,#2b3439 44%,#232d32 100%);
+}
+html.fm1-phone #sim-device *{transition:none}
+html.fm1-phone .device-brand,html.fm1-phone .case-mark,html.fm1-phone .screw,
+html.fm1-phone .screen-caption{display:none}
+
+/* LCD: as big as the height allows, centred */
+html.fm1-phone .screen-bezel{
+  left:calc(50% - var(--S) / 2);top:calc((var(--A) - 28px - var(--S)) / 2);
+  width:var(--S);height:var(--S);padding:4px;box-sizing:border-box;border-radius:8px;
+}
+
+/* encoders (shared) */
+html.fm1-phone .encoder{width:calc(var(--dial) * 1.6);height:var(--dial)}
+html.fm1-phone .encoder .dial{width:var(--dial);height:var(--dial)}
+html.fm1-phone .encoder>span{font-size:var(--lab);bottom:calc(100% + 4px);left:-30%;right:-30%;white-space:nowrap}
+html.fm1-phone .detents{top:calc(100% + 3px);gap:4px;opacity:1}
+html.fm1-phone .detents button{width:calc(var(--dial) * .62);height:calc(var(--dial) * .42);font-size:calc(var(--dial) * .3);border-radius:5px}
+
+/* left zone: MASTER SELECT / PRESETS ALGORITHM, then OCT- OCT+ */
+html.fm1-phone .encoder[data-fm1-enc="1"],html.fm1-phone .encoder[data-fm1-enc="3"]{left:calc(var(--side) * .3)!important}
+html.fm1-phone .encoder[data-fm1-enc="2"],html.fm1-phone .encoder[data-fm1-enc="4"]{left:calc(var(--side) * .72)!important}
+html.fm1-phone .encoder[data-fm1-enc="1"],html.fm1-phone .encoder[data-fm1-enc="2"]{top:calc(var(--A) * .24)!important}
+html.fm1-phone .encoder[data-fm1-enc="3"],html.fm1-phone .encoder[data-fm1-enc="4"]{top:calc(var(--A) * .58)!important}
+
+/* right zone: KNOB 1-4 in a row */
+html.fm1-phone .encoder[data-fm1-enc="k"]{width:calc(var(--side) * .24);height:var(--kdial);top:calc(var(--A) * .2)!important}
+html.fm1-phone .encoder[data-fm1-enc="k"] .dial{width:var(--kdial);height:var(--kdial)}
+html.fm1-phone .encoder[data-fm1-enc="k"] .detents button{width:calc(var(--kdial) * .55);height:calc(var(--kdial) * .45);font-size:calc(var(--kdial) * .32)}
+html.fm1-phone .encoder[data-fm1-enc="k"]>span{font-size:calc(var(--lab) * .9)}
+html.fm1-phone .encoder[data-fm1-knob="1"]{left:calc(100vw - var(--side) * .86)!important}
+html.fm1-phone .encoder[data-fm1-knob="2"]{left:calc(100vw - var(--side) * .62)!important}
+html.fm1-phone .encoder[data-fm1-knob="3"]{left:calc(100vw - var(--side) * .38)!important}
+html.fm1-phone .encoder[data-fm1-knob="4"]{left:calc(100vw - var(--side) * .14)!important}
+
+/* buttons: positioned by their centre */
+html.fm1-phone .panel-button{
+  transform:translate(-50%,-50%);width:calc(var(--side) * .27)!important;height:calc(var(--A) * .115)!important;
+  font-size:max(10px, calc(var(--A) * .034));border-radius:7px;
+}
+html.fm1-phone .panel-button.held{transform:translate(-50%,calc(-50% + 2px))}
+html.fm1-phone .panel-button small{font-size:max(7px, calc(var(--A) * .02))}
+html.fm1-phone .panel-button[data-button="0"]{left:calc(var(--side) * .3)!important;top:calc(var(--A) * .87)!important;width:calc(var(--side) * .36)!important}
+html.fm1-phone .panel-button[data-button="1"]{left:calc(var(--side) * .72)!important;top:calc(var(--A) * .87)!important;width:calc(var(--side) * .36)!important}
+/* 3 columns x 4 rows: FX SCL ENV / LFO EDIT GLO / HOME SAVE ARP / SEQ PLAY REC */
+html.fm1-phone .panel-button:is([data-button="2"],[data-button="5"],[data-button="8"],[data-button="11"]){left:calc(100vw - var(--side) * .8)!important}
+html.fm1-phone .panel-button:is([data-button="3"],[data-button="6"],[data-button="9"],[data-button="12"]){left:calc(100vw - var(--side) * .5)!important}
+html.fm1-phone .panel-button:is([data-button="4"],[data-button="7"],[data-button="10"],[data-button="13"]){left:calc(100vw - var(--side) * .2)!important}
+html.fm1-phone .panel-button:is([data-button="2"],[data-button="3"],[data-button="4"]){top:calc(var(--A) * .46)!important}
+html.fm1-phone .panel-button:is([data-button="5"],[data-button="6"],[data-button="7"]){top:calc(var(--A) * .6)!important}
+html.fm1-phone .panel-button:is([data-button="8"],[data-button="9"],[data-button="10"]){top:calc(var(--A) * .74)!important}
+html.fm1-phone .panel-button:is([data-button="11"],[data-button="12"],[data-button="13"]){top:calc(var(--A) * .88)!important}
+
+/* keyboard: a drawer that slides up from the bottom edge */
+html.fm1-phone .keyboard{
+  left:0;top:auto;bottom:0;width:100%;height:38dvh;border-radius:12px 12px 0 0;z-index:5;
+  transform:translateY(100%);visibility:hidden;transition:transform .18s ease,visibility 0s .18s!important;
+}
+html.fm1-phone.fm1-kb-open .keyboard{transform:none;visibility:visible;transition:transform .18s ease!important}
+html.fm1-phone .piano-key span{font-size:max(8px, calc(var(--lab) * .85))}
+html.fm1-phone .piano-key.black span{font-size:max(7px, calc(var(--lab) * .75))}
+
+/* our two small controls */
+#fm1-phone-bar{display:none}
+html.fm1-phone #fm1-phone-bar{display:block}
+#fm1-kb-tab,#fm1-menu-btn,#fm1-synth-btn{
+  position:fixed;z-index:1001;margin:0;font:600 12px/1 Consolas,"Liberation Mono",monospace;letter-spacing:.06em;
+  color:#d2dfdf;background:#2b383b;border:1px solid #5c7575;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+#fm1-kb-tab{left:50%;bottom:var(--kb);transform:translateX(-50%);height:26px;padding:0 22px;border-bottom:0;border-radius:10px 10px 0 0}
+#fm1-menu-btn{left:6px;top:6px;width:34px;height:30px;border-radius:7px;font-size:16px}
+#fm1-synth-btn{display:none;right:12px;bottom:12px;padding:12px 16px;border-radius:10px;background:#aae4c8;color:#172e24;border-color:#aae4c8;box-shadow:0 4px 14px #0008}
+html.fm1-full #fm1-synth-btn{display:block}

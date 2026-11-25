@@ -99,6 +99,8 @@ const headBlock =
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <script src="vendor/supabase.min.js"></script>
 <script src="gate.js"></script>
+<link rel="stylesheet" href="phone.css">
+<script src="phone.js"></script>
 <!-- FM1-PWA:END head -->
 `;
 const swBlock =
