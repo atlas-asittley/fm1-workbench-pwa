@@ -42,7 +42,8 @@
     bar.id = 'fm1-phone-bar';
     bar.innerHTML = '<button id="fm1-kb-tab" type="button" aria-label="Show or hide the keyboard"></button>' +
       '<button id="fm1-menu-btn" type="button" aria-label="Menu: show the full page">☰</button>' +
-      '<button id="fm1-help-btn" type="button" aria-label="Cheat sheet">?</button>';
+      '<button id="fm1-help-btn" type="button" aria-label="Cheat sheet">?</button>' +
+      '<button id="fm1-stop-btn" type="button" aria-label="Stop everything and rewind to the start">■ STOP</button>';
     document.body.appendChild(bar);
     var back = document.createElement('button');
     back.id = 'fm1-synth-btn'; back.type = 'button'; back.textContent = 'Back to synth';
@@ -55,6 +56,10 @@
     sheet.innerHTML = '<div class="fm1-sheet-head"><b>Cheat sheet</b><button type="button" id="fm1-sheet-close" aria-label="Close">✕</button></div><div id="fm1-sheet-body">Loading…</div>';
     document.body.appendChild(sheet);
     var loaded = false;
+    // the workbench's own "Panic / Stop all": stops the sequencer, rewinds to step 1, releases notes
+    document.getElementById('fm1-stop-btn').addEventListener('click', function () {
+      var b = document.getElementById('sim-panic'); if (b && !b.disabled) b.click();
+    });
     document.getElementById('fm1-help-btn').addEventListener('click', function () {
       sheet.hidden = false;
       if (loaded) return;
