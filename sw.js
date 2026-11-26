@@ -2,7 +2,7 @@
 // Pre-caches the wrapped workbench and serves it cache-first, so the app works offline after
 // the first visit. tools/update.mjs rewrites CACHE_VERSION on every update; a new version
 // installs alongside, then deletes every older fm1-wb-* cache when it activates.
-const CACHE_VERSION = 'fm1-wb-V14-4b3197fd-r7';
+const CACHE_VERSION = 'fm1-wb-V14-4b3197fd-r8';
 const PRECACHE = [
   'index.html',
   'manifest.webmanifest',

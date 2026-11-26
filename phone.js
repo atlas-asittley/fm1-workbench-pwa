@@ -18,6 +18,17 @@
       if (tab && tab.hidden && btn) btn.click();
     }
   }
+  // Measure the real screen size in px. On the installed app, Chrome can report a stale 100dvh at
+  // launch (before the landscape lock settles), which pushed the bottom and the keyboard off screen.
+  function measure() {
+    root.style.setProperty('--vh', window.innerHeight + 'px');
+    root.style.setProperty('--vw', window.innerWidth + 'px');
+  }
+  measure();
+  ['resize', 'orientationchange', 'pageshow', 'load'].forEach(function (e) { window.addEventListener(e, measure); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', measure);
+  document.addEventListener('visibilitychange', measure);
+  [100, 400, 1000, 2500].forEach(function (ms) { setTimeout(measure, ms); });
   function setKeys(open) {
     root.classList.toggle('fm1-kb-open', open);
     set('fm1-kb-open', open ? '1' : '0');
