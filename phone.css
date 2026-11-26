@@ -86,7 +86,7 @@ html.fm1-phone .piano-key.black span{font-size:max(7px, calc(var(--lab) * .75))}
 /* our two small controls */
 #fm1-phone-bar{display:none}
 html.fm1-phone #fm1-phone-bar{display:block}
-#fm1-kb-tab,#fm1-menu-btn,#fm1-synth-btn{
+#fm1-kb-tab,#fm1-menu-btn,#fm1-help-btn,#fm1-synth-btn{
   position:fixed;z-index:1001;margin:0;font:600 12px/1 Consolas,"Liberation Mono",monospace;letter-spacing:.06em;
   color:#d2dfdf;background:#2b383b;border:1px solid #5c7575;cursor:pointer;-webkit-tap-highlight-color:transparent;
 }
@@ -94,3 +94,15 @@ html.fm1-phone #fm1-phone-bar{display:block}
 #fm1-menu-btn{left:6px;top:6px;width:34px;height:30px;border-radius:7px;font-size:16px}
 #fm1-synth-btn{display:none;right:12px;bottom:12px;padding:12px 16px;border-radius:10px;background:#aae4c8;color:#172e24;border-color:#aae4c8;box-shadow:0 4px 14px #0008}
 html.fm1-full #fm1-synth-btn{display:block}
+#fm1-help-btn{left:46px;top:6px;width:34px;height:30px;border-radius:7px;font-size:16px}
+#fm1-sheet{position:fixed;z-index:1002;top:8px;bottom:8px;left:50%;transform:translateX(-50%);width:min(640px,calc(100vw - 16px));
+  display:flex;flex-direction:column;background:#142026;color:#e2ece6;border:1px solid #5c7575;border-radius:12px;box-shadow:0 10px 40px #000a;
+  font:15px/1.45 system-ui,sans-serif}
+#fm1-sheet[hidden]{display:none}
+.fm1-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 8px 16px;border-bottom:1px solid #2c3d43;font-size:17px}
+.fm1-sheet-head button{width:40px;height:36px;font-size:18px;background:#2b383b;color:#d2dfdf;border:1px solid #5c7575;border-radius:8px}
+#fm1-sheet-body{overflow:auto;padding:4px 16px 16px;-webkit-overflow-scrolling:touch}
+#fm1-sheet-body h3{margin:14px 0 2px;font-size:15px;color:#aae4c8}
+#fm1-sheet-body p{margin:0;color:#c9d6d3}
+#fm1-sheet-body b{color:#fff}
+#fm1-sheet-body section{all:unset;display:block;padding:0}

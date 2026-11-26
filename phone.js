@@ -41,7 +41,8 @@
     var bar = document.createElement('div');
     bar.id = 'fm1-phone-bar';
     bar.innerHTML = '<button id="fm1-kb-tab" type="button" aria-label="Show or hide the keyboard"></button>' +
-      '<button id="fm1-menu-btn" type="button" aria-label="Menu: show the full page">☰</button>';
+      '<button id="fm1-menu-btn" type="button" aria-label="Menu: show the full page">☰</button>' +
+      '<button id="fm1-help-btn" type="button" aria-label="Cheat sheet">?</button>';
     document.body.appendChild(bar);
     var back = document.createElement('button');
     back.id = 'fm1-synth-btn'; back.type = 'button'; back.textContent = 'Back to synth';
@@ -49,6 +50,18 @@
     document.getElementById('fm1-kb-tab').addEventListener('click', function () { setKeys(!root.classList.contains('fm1-kb-open')); });
     document.getElementById('fm1-menu-btn').addEventListener('click', function () { full = true; apply(); scrollTo(0, 0); });
     back.addEventListener('click', function () { full = false; apply(); });
+    var sheet = document.createElement('div');
+    sheet.id = 'fm1-sheet'; sheet.hidden = true;
+    sheet.innerHTML = '<div class="fm1-sheet-head"><b>Cheat sheet</b><button type="button" id="fm1-sheet-close" aria-label="Close">✕</button></div><div id="fm1-sheet-body">Loading…</div>';
+    document.body.appendChild(sheet);
+    var loaded = false;
+    document.getElementById('fm1-help-btn').addEventListener('click', function () {
+      sheet.hidden = false;
+      if (loaded) return;
+      fetch('cheatsheet.html').then(function (r) { return r.text(); }).then(function (t) { document.getElementById('fm1-sheet-body').innerHTML = t; loaded = true; })
+        .catch(function () { document.getElementById('fm1-sheet-body').textContent = 'Could not load the cheat sheet.'; });
+    });
+    document.getElementById('fm1-sheet-close').addEventListener('click', function () { sheet.hidden = true; });
     setKeys(get('fm1-kb-open') === '1');
     apply();
   }
